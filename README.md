@@ -5,4 +5,6 @@ Generates random passwords consisting of 8 to 10 letters, 2 to 4 symbols, and 2 
 
 Generated passwords are sent to the clipboard for easy use.
 
-Saves username, password, and site name to `data.txt`.
+Recall previously saved passwords using the search button.
+
+Saves username, password, and site name to `data.json`.
