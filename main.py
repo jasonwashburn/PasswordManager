@@ -63,6 +63,19 @@ def save_password():
             password_entry.delete(0, END)
 
 
+# ---------------------------- FIND PASSWORD ------------------------------- #
+def find_password():
+
+    with open('data.json', 'r') as data_file:
+        data = json.load(data_file)
+
+    site = data.get(website_entry.get())
+    email_user_entry.delete(0, END)
+    password_entry.delete(0, END)
+    if site is not None:
+        email_user_entry.insert(0, site['email'])
+        password_entry.insert(0, site['password'])
+
 
 # ---------------------------- UI SETUP ------------------------------- #
 # Window Setup
@@ -85,8 +98,8 @@ password_label = Label(text="Password:")
 password_label.grid(column=0, row=3)
 
 # Entries
-website_entry = Entry(width=42)
-website_entry.grid(column=1, row=1, columnspan=2)
+website_entry = Entry(width=23)
+website_entry.grid(column=1, row=1)
 website_entry.focus()
 email_user_entry = Entry(width=42)
 email_user_entry.grid(column=1, row=2, columnspan=2)
@@ -99,5 +112,7 @@ generate_button = ttk.Button(text="Generate Password", command=generate_password
 generate_button.grid(column=2, row=3)
 add_button = ttk.Button(text="Add", width=40, command=save_password)
 add_button.grid(column=1, row=4, columnspan=2)
+search_button = ttk.Button(text="Search", width=15, command=find_password)
+search_button.grid(column=2, row=1)
 
 window.mainloop()
