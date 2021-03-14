@@ -2,6 +2,8 @@ from tkinter import *
 from tkinter import ttk, messagebox
 import random
 import pyperclip
+import json
+
 
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
 
@@ -34,18 +36,33 @@ def save_password():
     website = website_entry.get()
     email = email_user_entry.get()
     password = password_entry.get()
+    new_data = {
+        website: {
+            'email': email,
+            'password': password
+        }
+    }
 
     # Check to make sure fields are filled, if not, prompt user to fix
     if len(website) == 0 or len(password) == 0:
         messagebox.showerror(title="Empty Field", message="Please do not leave any fields empty.")
     else:
-        ok_to_save = messagebox.askokcancel(title="website", message=f"These are the details you entered:\nEmail: "
-                                                                     f"{email}\nPassword: {password}\nIs it ok to save?")
-        if ok_to_save:
-            with open('data.txt', 'a') as file:
-                file.write(f"{website} | {email} | {password}\n")
-            website_entry.delete(0, END)
-            password_entry.delete(0, END)
+        try:
+            data_file = open("data.json", 'r')
+        except FileNotFoundError:
+            print('data.json not found, creating new file')
+            data = new_data
+        else:
+            data = json.load(data_file)
+            data.update(new_data)
+        finally:
+            data_file = open("data.json", 'w')
+            json.dump(data, data_file, indent=4)
+            data_file.close()
+
+        website_entry.delete(0, END)
+        password_entry.delete(0, END)
+
 
 
 # ---------------------------- UI SETUP ------------------------------- #
@@ -53,7 +70,6 @@ def save_password():
 window = Tk()
 window.title("Password Manager")
 window.config(padx=50, pady=50)
-
 
 # Lock Background Image
 canvas = Canvas(width=200, height=200, highlightthickness=0)
