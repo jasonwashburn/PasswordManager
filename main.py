@@ -65,16 +65,22 @@ def save_password():
 
 # ---------------------------- FIND PASSWORD ------------------------------- #
 def find_password():
+    try:
+        with open('data.json', 'r') as data_file:
+            data = json.load(data_file)
+    except FileNotFoundError:
+        messagebox.showerror(title="File Not Found", message="There are no saved passwords.")
+    else:
+        site = data.get(website_entry.get())
 
-    with open('data.json', 'r') as data_file:
-        data = json.load(data_file)
-
-    site = data.get(website_entry.get())
-    email_user_entry.delete(0, END)
-    password_entry.delete(0, END)
-    if site is not None:
-        email_user_entry.insert(0, site['email'])
-        password_entry.insert(0, site['password'])
+        if site is not None:
+            email_user_entry.delete(0, END)
+            password_entry.delete(0, END)
+            email_user_entry.insert(0, site['email'])
+            password_entry.insert(0, site['password'])
+        else:
+            messagebox.showerror(title="Not Found",
+                                 message=f"There is no information saved for site: {website_entry.get()}")
 
 
 # ---------------------------- UI SETUP ------------------------------- #
